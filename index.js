@@ -1,5 +1,5 @@
 const fs = require('fs/promises');
-const { existsSync } = require('fs');
+const { existsSync, readdirSync, lstatSync } = require('fs');
 const path = require('path');
 
 async function deleteFile(filePath) {
@@ -60,6 +60,24 @@ async function deleteFileAdvanced(folderPath, fileType, paths = []) {
         if (path.extname(actualPath) === `.${fileType}`) paths.push(actualPath);
       }
     }
+    console.log('paths', paths);
+    return paths;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+function deleteFileSync(folderPath, fileType, paths = []) {
+  try {
+    const files = readdirSync(folderPath);
+    for (const file of files) {
+      const actualPath = `${folderPath}\\${file}`;
+      if (lstatSync(actualPath).isDirectory()) {
+        deleteFileSync(actualPath, fileType, paths);
+      } else {
+        if (path.extname(actualPath) === `.${fileType}`) paths.push(actualPath);
+      }
+    }
     return paths;
   } catch (err) {
     console.log(err);
@@ -67,17 +85,35 @@ async function deleteFileAdvanced(folderPath, fileType, paths = []) {
 }
 
 // deleteFilesFromFolder(process.argv[2], process.argv[3]);
-deleteFileAdvanced(process.argv[2], process.argv[3])
-  .then(data => {
-    if (data.length === 0)
-      console.log(`No files found of ${process.argv[3]} type`);
-    else {
-      data.forEach(async d => {
-        if (existsSync(d)) await deleteFile(d);
-      });
-      console.log(`${data.length} files deleted`);
-    }
-  })
-  .catch(err => {
-    console.log(err);
-  });
+// if (!process.argv[2] || !process.argv[3]) {
+//   console.log('Folder path and file type are required as an argument');
+// } else {
+//   deleteFileAdvanced(process.argv[2], process.argv[3])
+//     .then(data => {
+//       if (data.length === 0)
+//         console.log(`No files found of ${process.argv[3]} type`);
+//       else {
+//         data.forEach(async d => {
+//           if (existsSync(d)) await deleteFile(d);
+//         });
+//         console.log(`${data.length} files deleted`);
+//       }
+//     })
+//     .catch(err => {
+//       console.log(err);
+//     });
+// }
+
+if (!process.argv[2] || !process.argv[3]) {
+  console.log('Folder path and file type are required as an argument');
+} else {
+  const data = deleteFileSync(process.argv[2], process.argv[3]);
+  if (data.length === 0)
+    console.log(`No files found of ${process.argv[3]} type`);
+  else {
+    data.forEach(async d => {
+      if (existsSync(d)) await deleteFile(d);
+    });
+    console.log(`${data.length} files deleted`);
+  }
+}
