@@ -1,4 +1,5 @@
 const fs = require('fs/promises');
+const { existsSync } = require('fs');
 const path = require('path');
 
 async function deleteFile(filePath) {
@@ -48,4 +49,35 @@ async function deleteFilesFromFolder(folderPath, fileType) {
   }
 }
 
-deleteFilesFromFolder(process.argv[2], process.argv[3]);
+async function deleteFileAdvanced(folderPath, fileType, paths = []) {
+  try {
+    const files = await fs.readdir(folderPath);
+    for (const file of files) {
+      const actualPath = `${folderPath}\\${file}`;
+      if ((await fs.lstat(actualPath)).isDirectory()) {
+        deleteFileAdvanced(actualPath, fileType, paths);
+      } else {
+        if (path.extname(actualPath) === `.${fileType}`) paths.push(actualPath);
+      }
+    }
+    return paths;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+// deleteFilesFromFolder(process.argv[2], process.argv[3]);
+deleteFileAdvanced(process.argv[2], process.argv[3])
+  .then(data => {
+    if (data.length === 0)
+      console.log(`No files found of ${process.argv[3]} type`);
+    else {
+      data.forEach(async d => {
+        if (existsSync(d)) await deleteFile(d);
+      });
+      console.log(`${data.length} files deleted`);
+    }
+  })
+  .catch(err => {
+    console.log(err);
+  });
