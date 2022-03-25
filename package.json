@@ -1,12 +1,23 @@
 {
-  "name": "file_manipulation",
+  "name": "node-file-remover",
   "version": "1.0.0",
-  "description": "",
+  "description": "An utility to delete files from a list of folders inside of a parent folder",
   "main": "index.js",
+  "homepage": "https://github.com/HasanAutomation/file_deletion_node_js/tree/file-delete-final-code",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HasanAutomation/file_deletion_node_js/tree/file-delete-final-code"
+  },
   "scripts": {
     "start": "node index.js"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "nodejs",
+    "filesystem",
+    "read",
+    "write",
+    "delete"
+  ],
+  "author": "Hasan Ali",
   "license": "ISC"
 }

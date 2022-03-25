@@ -10,6 +10,10 @@ async function deleteFile(filePath) {
 }
 
 async function deleteFileAdvanced(folderPath, fileType, paths = []) {
+  if (!folderPath || !fileType) {
+    console.log('Folder path and file type are required as an argument');
+    return;
+  }
   try {
     const files = await fs.readdir(folderPath);
     for (const file of files) {
@@ -36,8 +40,10 @@ async function deleteFileAdvanced(folderPath, fileType, paths = []) {
   }
 }
 
-if (!process.argv[2] || !process.argv[3]) {
-  console.log('Folder path and file type are required as an argument');
-} else {
-  deleteFileAdvanced(process.argv[2], process.argv[3]);
-}
+// if (!process.argv[2] || !process.argv[3]) {
+//   console.log('Folder path and file type are required as an argument');
+// } else {
+//   deleteFileAdvanced(process.argv[2], process.argv[3]);
+// }
+
+module.exports = { deleteFileAdvanced };

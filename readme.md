@@ -1,7 +1,31 @@
-# File deletion based on extension
+# node-file-remover
 
-**To use this utility follow the below instrcution**
+Delete files from a list of folders inside a parent folder based on file extension
 
-1. Open cmd
-2. Run `npm start "<file_path>" "<ext>" `
-3. For example file_path = "D:/app" and ext = "mp4"
+## Installation
+
+```js
+# using npm
+npm install node-file-remover
+
+# using yarn
+yarn add node-file-remover
+```
+
+## Usage
+
+```js
+# using require
+const { deleteFileAdvanced } = require('node-file-remover');
+
+# using import
+import { deleteFileAdvanced } from 'node-file-remover';
+```
+
+## Example
+
+```js
+const folderPath = 'D:/app';
+const fileExt = 'mp4';
+deleteFileAdvanced(folderPath, fileExt);
+```
